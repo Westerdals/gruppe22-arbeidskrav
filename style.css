@@ -1,0 +1,39 @@
+body{
+    background-color: #2f2f2f;
+}
+
+#containerDiv{
+    position: relative;
+}
+
+#buttonGrid {
+    display: grid;
+    top: 50px;
+    position: absolute;
+    grid-row-gap: 30px;
+    
+}
+
+.btn{
+    height: 100px;
+    width: 200px;
+    border-radius: 5%;
+    font-size: 15px;
+}
+
+#oppgaveGrid {
+    display: grid;
+    grid-row-gap: 30px;
+    position: absolute;
+    top: 80px;
+    left: 500px;
+}
+
+.oppgaveInput{
+    height: 70px;
+    width: 300px;
+    font-size: 15px;
+    border-radius: 5%;
+}
+
+

@@ -1,0 +1,270 @@
+<!doctype html>
+<html>
+<head>
+
+
+<style>
+        #containerDiv{
+            position: relative;
+        }
+
+        body{
+            background-color: #2f2f2f;
+        }
+
+        #overText{
+            color: white;
+        }
+
+        #opprettMedlemDiv{
+            position: absolute;
+            width: 300px;
+
+        }
+
+        #medlemsForm{
+            display: grid;
+            grid-row-gap: 10px;
+
+        }
+
+        #rMedlemBtn{
+            width: 100px;
+        }
+
+        #opprettOppgaveDiv{
+            position: absolute;
+            width: 300px;
+            left: 350px;
+
+        }
+
+        #oppgaveForm{
+            display: grid;
+            grid-row-gap: 10px;
+        }
+
+        #listeDiv{
+            position: absolute;
+            top: 200px;
+        }
+        
+        #teamMembers{
+            display: none;
+        }
+
+
+</style>
+
+</head>
+
+<body>
+
+    <h1 id="overText">Arbeidstildeling</h1>
+    
+
+    <div id="containerDiv">
+       
+
+    <div id="opprettMedlemDiv">
+    
+        <h3 id="overText">Registrer nytt teammedlem</h3>
+        <form id="medlemsForm" onsubmit="registerMember(event)">
+        <input name="name" id="nameInput" class="medlemInputs" placeholder="Navn..">
+        <input name="employeeId" class="medlemInputs" placeholder="Ansattnummer..">
+        <input type="submit" id="rMedlemBtn" value="Registrer"/>
+        </form>
+
+    </div>
+
+    <div id="opprettOppgaveDiv">
+        <h3 id="overText">Registrer ny arbeidsoppgave</h3>
+        <form id="oppgaveForm" onsubmit="registerTask">
+        <input name="headLine" id="overskriftInput" class="oppgaveInputs" placeholder="Overskrift..">
+        <textArea name="description" class="oppgaveInputsInputs" placeholder="Hva skal gjøres?"></textArea>
+        <select id="delegateTask"></select>
+        <input type="submit" value="Registrer"/>
+        </form>
+    </div>
+
+
+    <div id="listeDiv">
+        
+        <form id="visMedlem" onsubmit="displayMembers(event)">
+        <input type="submit" value="Vis teamMedlemmer"/>
+        </form>
+        <div id="teamMembers"></div>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+    </div>
+
+</body>
+
+<script>
+
+    /* function getItemFromStorage(title) {
+        const getem = JSON.parse(window.localStorage.getItem(`"${title}"`));
+        return getem;
+    }
+
+    baz = new getItemFromStorage(teamListe);
+    console.log(baz);
+
+    */
+
+    // OPPDATER MEDLEMSLISTE
+        
+        let some;
+
+
+    // REGISTERE NYTT MEDLEM
+
+    function registerMember(event){
+        event.preventDefault();
+
+        const name = document.querySelector("[name='name']").value;
+        const employeeId = document.querySelector("[name='employeeId']").value;
+    
+        const employee = {name, employeeId};
+        // console.log(employee);
+
+        let teamList = [employee];
+
+        window.localStorage.setItem("teamList", JSON.stringify(teamList));
+
+        event.target.reset();
+
+        // Alternativ løsning?
+
+/*
+        const tre = JSON.parse(window.localStorage.getItem("teamList"));
+
+          if(tre != null){
+             teamList.push(employee);
+        } else {
+            window.localStorage.setItem("teamList", JSON.stringify(teamList));
+        }
+        */ 
+
+        
+
+
+        
+
+        /* const medlemListe = JSON.parse(window.localStorage.getItem("teamList"));
+        medlemListe.push(employee);
+        window.localStorage.setItem("teamList", JSON.stringify(teamList));
+*/
+    }
+
+// VIS MEDLEMMER
+
+    function displayMembers(event) {
+        event.preventDefault();
+
+        const memberList = JSON.parse(window.localStorage.getItem("teamList"));
+
+        const outputDiv = document.getElementById("teamMembers");
+        outputDiv.style.display = "initial";
+
+
+
+        if(memberList === null){
+            let memberElement = document.createElement("div");
+             memberElement.style.backgroundColor = "white";
+
+             memberElement.innerText =  "Legg til medlemmer for å vise ansatte";
+             outputDiv.appendChild(memberElement);
+        } else {
+            for (const member of memberList){
+                let secondMemberElement = document.createElement("div");
+
+                secondMemberElement.style.backgroundColor = "white";
+                secondMemberElement.innerText = member.name + ", ansattnr: " + member.employeeId;
+                outputDiv.appendChild(secondMemberElement);
+            }
+        }
+
+    }
+
+
+// ARBEIDSOPPGAVE
+
+    const taskDown = document.getElementById("delegateTask");
+
+    const dragMemberList = JSON.parse(window.localStorage.getItem("teamList")) || [];
+    let nameArray;
+
+    for(const vasker of dragMemberList){
+        nameArray = [vasker.name];
+        console.log(nameArray);
+    }
+
+    for(const ansatt of dragMemberList){
+        if(dragMemberList === null){
+            const newOption = document.createElement("option");
+            newOption.value="Medlemslisten er tom";
+
+        } else {
+
+            for (let i = 0; i < nameArray.length; i++){
+                let option = document.createElement("option");
+                option.value = nameArray[i];
+                option.text = nameArray[i];
+                taskDown.appendChild(option);
+            }
+
+
+        }
+
+    }
+
+
+
+// REGISTRERE NY ARBEIDSOPPGAVE
+
+    function registerTask(event) {
+        event.preventDefault();
+
+        const headLine = document.querySelector("[name='headLine']").value;
+        const description = document.querySelector("[name='description']").value;
+        const assignedMember = document.getElementById("delegateTask").value;
+
+        const assignment = {headLine, description, assignedMember};
+        console.log(assignment);
+
+        const assignmentList = [assignment];
+        window.localStorage.setItem("assignmentList", JSON.stringify([assignmentList]));
+
+        event.target.reset();
+
+    }
+
+
+
+
+    
+     window.addEventListener("storage", function event(){
+        if(event.key === "teamListe"){
+            displayMembers();
+        }
+    });
+
+
+
+
+</script>
+
+
+</html>

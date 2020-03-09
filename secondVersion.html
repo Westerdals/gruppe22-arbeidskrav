@@ -232,15 +232,6 @@ function SaveDataToLocalStorage(data)
         outputDiv.innerHTML = "";
 
         let teamInputs = JSON.parse(localStorage.getItem("teamList"));
-        
-        
-        //test. lagt til på ny 09.03 //
-        
-    for (const medarbeider of medarbeiderList) {
-    const medarbeiderEl = document.createElement("div");
-    medarbeiderListEl.innerText = medarbeider.name;
-    medarbeiderEl.appendChild(medarbeiderEl);
-}
 
 
         if(teamInputs === null){

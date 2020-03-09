@@ -100,7 +100,17 @@
 
 
     </div>
+        <div id="oppgaveDiv">
 
+            <form id="visOppgave" onsubmit="displayOppgaver(event)">
+                <input type="submit" value="Vis oppgaver"/>
+            </form>
+            <div id="oppGaver"></div>
+
+
+
+
+        </div>
 
 
 
@@ -114,24 +124,6 @@
 
 <script>
 
-        // REGISTRERE NY ARBEIDSOPPGAVE
-
-        function registerTask(event) {
-        event.preventDefault();
-
-        const headLine = document.querySelector("[name='headLine']").value;
-        const description = document.querySelector("[name='description']").value;
-        const assignedMember = document.getElementById("delegateTask").value;
-
-        const assignmentList = JSON.parse(window.localStorage.getItem("assignmentList")) || [];
-
-        assignmentList.push({headLine: headLine, description: description, member: assignedMember});
-        window.localStorage.setItem("assignmentList", JSON.stringify(assignmentList));
-
-        event.target.reset();
-
-    }
-
     /* function getItemFromStorage(title) {
         const getem = JSON.parse(window.localStorage.getItem(`"${title}"`));
         return getem;
@@ -144,6 +136,7 @@
 
     // OPPDATER MEDLEMSLISTE
         
+        let some;
 
 
     // REGISTERE NYTT MEDLEM
@@ -201,6 +194,9 @@ function SaveDataToLocalStorage(data)
         const employeeId = document.querySelector("[name='employeeId']").value;
 
 
+    
+        // const employee = {name, employeeId};
+
         
 
         const medlemListe = JSON.parse(window.localStorage.getItem("teamList")) || [];
@@ -215,6 +211,25 @@ function SaveDataToLocalStorage(data)
 
      }
 
+     // REGISTRERE NY ARBEIDSOPPGAVE
+
+    function registerTask(event) {
+        event.preventDefault();
+
+        const headLine = document.querySelector("[name='headLine']").value;
+        const description = document.querySelector("[name='description']").value;
+        const assignedMember = document.getElementById("delegateTask").value;
+
+        const assignmentList = JSON.parse(window.localStorage.getItem("assignmentList")) || [];
+
+        assignmentList.push({headLine: headLine, description: description, member: assignedMember});
+        window.localStorage.setItem("assignmentList", JSON.stringify(assignmentList));
+
+        event.target.reset();
+
+    }
+
+    
 
 
 
@@ -227,6 +242,15 @@ function SaveDataToLocalStorage(data)
         outputDiv.innerHTML = "";
 
         let teamInputs = JSON.parse(localStorage.getItem("teamList"));
+        
+        
+        //test. lagt til på ny 09.03 //
+        
+    for (const medarbeider of medarbeiderList) {
+    const medarbeiderEl = document.createElement("div");
+    medarbeiderListEl.innerText = medarbeider.name;
+    medarbeiderEl.appendChild(medarbeiderEl);
+}
 
 
         if(teamInputs === null){
@@ -241,6 +265,10 @@ function SaveDataToLocalStorage(data)
 
             }
         }
+       /*  let optionOutput = document.createElement("option");
+            optionOutput.value = teamInputs[i].name;
+            optionOutput.value = teamInputs[i].name; 
+*/
 
         event.target.reset();
     }
@@ -307,6 +335,40 @@ function SaveDataToLocalStorage(data)
         }
     });
 
+  function displayOppgaver(event) {
+        event.preventDefault();
+
+        let outputDiv = document.getElementById("oppGaver");
+        outputDiv.innerHTML = "";
+
+        let teamInputs = JSON.parse(localStorage.getItem("oppgaveList"));
+
+
+    for (const oppgave of oppgaverList) {
+    const oppgaveEl = document.createElement("div");
+    oppgaveListEl.innerText = oppgave.name;
+    oppgaveEl.appendChild(oppgaveEl);
+}
+
+  if(oppgaveInputs === null){
+            let emptyMessage = document.createElement("div");
+            emptyMessage.innerHTML = "Legg til oppgaver for at de skal vises";
+            outputDiv.appendChild(emptyMessage);
+        } else {
+            for(let i=0; i<oppgaveInputs.length; i++){
+                let oppgaver = document.createElement("div");
+                oppgaver.innerHTML = oppgaveInputs[i].name + ": " + oppgaveInputs[i].oppgavenr;
+                outputDiv.appendChild(oppgaver);
+
+            }
+        }
+       /*  let optionOutput = document.createElement("option");
+            optionOutput.value = oppgaveInputs[i].name;
+            optionOutput.value = oppgaveInputs[i].name;
+*/
+
+        event.target.reset();
+    }
 
 
 

@@ -243,10 +243,17 @@
             oppgaveOutputDiv.appendChild(emptyMessage);
         } else {
 
-            // ********************************************
-
+   for(let i=0; i<arrayLength; i++){
+                let oppgaver = document.createElement("div");
+       
+                oppgaver.innerHTML = `* ${oppGaveInputs[i].headLine}:
+                ${oppGaveInputs[i].description}
+                Gjøres av: ${oppGaveInputs[i].member}`;
+       
+                oppgaveOutputDiv.appendChild(oppgaver);
             }
-        }
+    
+        } 
   }
 
 

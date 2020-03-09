@@ -52,6 +52,16 @@
         #teamMembers{
             background-color: white;
         }
+
+        #oppgaveDiv{
+            position: absolute;
+            left: 350px;
+            top: 200px;
+        }
+
+        #oppGaver{
+            background-color: white;
+        }
         
 
 
@@ -80,7 +90,7 @@
 
     <div id="opprettOppgaveDiv">
         <h3 id="overText">Registrer ny arbeidsoppgave</h3>
-        <form id="oppgaveForm" onsubmit="registerTask">
+        <form id="oppgaveForm" onsubmit="registerTask(event)">
         <input name="headLine" id="overskriftInput" class="oppgaveInputs" placeholder="Overskrift..">
         <textArea name="description" class="oppgaveInputsInputs" placeholder="Hva skal gjøres?"></textArea>
         <select name="Navn" id="delegateTask"></select>
@@ -107,16 +117,7 @@
             </form>
             <div id="oppGaver"></div>
 
-
-
-
         </div>
-
-
-
-
-
-
 
     </div>
 
@@ -124,67 +125,8 @@
 
 <script>
 
-    /* function getItemFromStorage(title) {
-        const getem = JSON.parse(window.localStorage.getItem(`"${title}"`));
-        return getem;
-    }
 
-    baz = new getItemFromStorage(teamListe);
-    console.log(baz);
-
-    */
-
-    // OPPDATER MEDLEMSLISTE
-        
-        let some;
-
-
-    // REGISTERE NYTT MEDLEM
-
-    /* 
-var a = [];
-a.push(JSON.parse(localStorage.getItem('session')));
-localStorage.setItem('session', JSON.stringify(a));
-
-function SaveDataToLocalStorage(data)
-{
-    var a = [];
-    // Parse the serialized data back into an aray of objects
-    a = JSON.parse(localStorage.getItem('session')) || [];
-    // Push the new data (whether it be an object or anything else) onto the array
-    a.push(data);
-    // Alert the array value
-    alert(a);  // Should be something like [Object array]
-    // Re-serialize the array back into a string and store it in localStorage
-    localStorage.setItem('session', JSON.stringify(a));
-
-
-    */
-
-    /* (function openStorage()){
-        let teamList = [];
-        teamList.push(localStorage.setItem)
-    })();
-    
-    function registerMember(event){
-        event.preventDefault();
-
-        const name = document.querySelector("[name='name']").value;
-        const employeeId = document.querySelector("[name='employeeId']").value;
-
-        const employee = {name, employeeId};
-
-        let teamList = [];
-
-
-
-        localStorage.setItem('teamList', JSON.stringify(teamList));
-        teamList.push(employee);
-
-        event.target.reset();
-    } */
-
-    // REGISTRERE MEDLEM
+// REGISTRERE MEDLEM
     
 
      function registerMember(event){
@@ -192,10 +134,6 @@ function SaveDataToLocalStorage(data)
 
         const name = document.querySelector("[name='name']").value;
         const employeeId = document.querySelector("[name='employeeId']").value;
-
-
-    
-        // const employee = {name, employeeId};
 
         
 
@@ -211,7 +149,7 @@ function SaveDataToLocalStorage(data)
 
      }
 
-     // REGISTRERE NY ARBEIDSOPPGAVE
+// REGISTRERE NY ARBEIDSOPPGAVE
 
     function registerTask(event) {
         event.preventDefault();
@@ -230,9 +168,6 @@ function SaveDataToLocalStorage(data)
     }
 
     
-
-
-
 // VIS MEDLEMMER
 
     function displayMembers(event) {
@@ -243,15 +178,6 @@ function SaveDataToLocalStorage(data)
 
         let teamInputs = JSON.parse(localStorage.getItem("teamList"));
         
-        
-        //test. lagt til på ny 09.03 //
-        
-    for (const medarbeider of medarbeiderList) {
-    const medarbeiderEl = document.createElement("div");
-    medarbeiderListEl.innerText = medarbeider.name;
-    medarbeiderEl.appendChild(medarbeiderEl);
-}
-
 
         if(teamInputs === null){
             let emptyMessage = document.createElement("div");
@@ -265,16 +191,11 @@ function SaveDataToLocalStorage(data)
 
             }
         }
-       /*  let optionOutput = document.createElement("option");
-            optionOutput.value = teamInputs[i].name;
-            optionOutput.value = teamInputs[i].name; 
-*/
-
-        event.target.reset();
     }
 
 
-// ARBEIDSOPPGAVE
+
+// Vis mulige medlemmer i drop-down liste
 
     const taskDown = document.getElementById("delegateTask");
     taskDown.value = "";
@@ -301,75 +222,32 @@ function SaveDataToLocalStorage(data)
         }
 
     }
-    
 
 
-
-
-// REGISTRERE NY ARBEIDSOPPGAVE
-
-    function registerTask(event) {
-        event.preventDefault();
-
-        const headLine = document.querySelector("[name='headLine']").value;
-        const description = document.querySelector("[name='description']").value;
-        const assignedMember = document.getElementById("delegateTask").value;
-
-        const assignment = {headLine, description, assignedMember};
-        console.log(assignment);
-
-        const assignmentList = [assignment];
-        window.localStorage.setItem("assignmentList", JSON.stringify([assignmentList]));
-
-        event.target.reset();
-
-    }
-
-
-
-
-    
-     window.addEventListener("storage", function event(){
-        if(event.key === "teamListe"){
-            displayMembers();
-        }
-    });
+// VIS OPPGAVER OG TILDELINGEN TIL TEAMMEDLEMMER
 
   function displayOppgaver(event) {
         event.preventDefault();
 
-        let outputDiv = document.getElementById("oppGaver");
-        outputDiv.innerHTML = "";
+        let oppgaveOutputDiv = document.getElementById("oppGaver");
+        oppgaveOutputDiv.innerHTML = "";
 
-        let teamInputs = JSON.parse(localStorage.getItem("oppgaveList"));
+        let oppGaveInputs = JSON.parse(window.localStorage.getItem("assignmentList"));
+        let memberOutputs = JSON.parse(window.localStorage.getItem("teamList"));
 
+        let arrayLength = oppGaveInputs.length;
 
-    for (const oppgave of oppgaverList) {
-    const oppgaveEl = document.createElement("div");
-    oppgaveListEl.innerText = oppgave.name;
-    oppgaveEl.appendChild(oppgaveEl);
-}
-
-  if(oppgaveInputs === null){
+  if(oppGaveInputs === null){
             let emptyMessage = document.createElement("div");
             emptyMessage.innerHTML = "Legg til oppgaver for at de skal vises";
-            outputDiv.appendChild(emptyMessage);
+            oppgaveOutputDiv.appendChild(emptyMessage);
         } else {
-            for(let i=0; i<oppgaveInputs.length; i++){
-                let oppgaver = document.createElement("div");
-                oppgaver.innerHTML = oppgaveInputs[i].name + ": " + oppgaveInputs[i].oppgavenr;
-                outputDiv.appendChild(oppgaver);
+
+            // ********************************************
 
             }
         }
-       /*  let optionOutput = document.createElement("option");
-            optionOutput.value = oppgaveInputs[i].name;
-            optionOutput.value = oppgaveInputs[i].name;
-*/
-
-        event.target.reset();
-    }
-
+  }
 
 
 </script>

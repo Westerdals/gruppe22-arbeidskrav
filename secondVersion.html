@@ -114,6 +114,24 @@
 
 <script>
 
+        // REGISTRERE NY ARBEIDSOPPGAVE
+
+        function registerTask(event) {
+        event.preventDefault();
+
+        const headLine = document.querySelector("[name='headLine']").value;
+        const description = document.querySelector("[name='description']").value;
+        const assignedMember = document.getElementById("delegateTask").value;
+
+        const assignmentList = JSON.parse(window.localStorage.getItem("assignmentList")) || [];
+
+        assignmentList.push({headLine: headLine, description: description, member: assignedMember});
+        window.localStorage.setItem("assignmentList", JSON.stringify(assignmentList));
+
+        event.target.reset();
+
+    }
+
     /* function getItemFromStorage(title) {
         const getem = JSON.parse(window.localStorage.getItem(`"${title}"`));
         return getem;
@@ -201,25 +219,6 @@ function SaveDataToLocalStorage(data)
 
      }
 
-     // REGISTRERE NY ARBEIDSOPPGAVE
-
-    function registerTask(event) {
-        event.preventDefault();
-
-        const headLine = document.querySelector("[name='headLine']").value;
-        const description = document.querySelector("[name='description']").value;
-        const assignedMember = document.getElementById("delegateTask").value;
-
-        const assignmentList = JSON.parse(window.localStorage.getItem("assignmentList")) || [];
-
-        assignmentList.push({headLine: headLine, description: description, member: assignedMember});
-        window.localStorage.setItem("assignmentList", JSON.stringify(assignmentList));
-
-        event.target.reset();
-
-    }
-
-    
 
 
 

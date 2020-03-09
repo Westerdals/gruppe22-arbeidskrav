@@ -48,10 +48,11 @@
             position: absolute;
             top: 200px;
         }
-        
+
         #teamMembers{
-            display: none;
+            background-color: white;
         }
+        
 
 
 </style>
@@ -82,7 +83,7 @@
         <form id="oppgaveForm" onsubmit="registerTask">
         <input name="headLine" id="overskriftInput" class="oppgaveInputs" placeholder="Overskrift..">
         <textArea name="description" class="oppgaveInputsInputs" placeholder="Hva skal gjøres?"></textArea>
-        <select id="delegateTask"></select>
+        <select name="Navn" id="delegateTask"></select>
         <input type="submit" value="Registrer"/>
         </form>
     </div>
@@ -130,105 +131,159 @@
 
     // REGISTERE NYTT MEDLEM
 
+    /* 
+var a = [];
+a.push(JSON.parse(localStorage.getItem('session')));
+localStorage.setItem('session', JSON.stringify(a));
+
+function SaveDataToLocalStorage(data)
+{
+    var a = [];
+    // Parse the serialized data back into an aray of objects
+    a = JSON.parse(localStorage.getItem('session')) || [];
+    // Push the new data (whether it be an object or anything else) onto the array
+    a.push(data);
+    // Alert the array value
+    alert(a);  // Should be something like [Object array]
+    // Re-serialize the array back into a string and store it in localStorage
+    localStorage.setItem('session', JSON.stringify(a));
+
+
+    */
+
+    /* (function openStorage()){
+        let teamList = [];
+        teamList.push(localStorage.setItem)
+    })();
+    
     function registerMember(event){
         event.preventDefault();
 
         const name = document.querySelector("[name='name']").value;
         const employeeId = document.querySelector("[name='employeeId']").value;
-    
+
         const employee = {name, employeeId};
-        // console.log(employee);
 
-        let teamList = [employee];
+        let teamList = [];
 
-        window.localStorage.setItem("teamList", JSON.stringify(teamList));
+
+
+        localStorage.setItem('teamList', JSON.stringify(teamList));
+        teamList.push(employee);
+
+        event.target.reset();
+    } */
+
+    // REGISTRERE MEDLEM
+    
+
+     function registerMember(event){
+        event.preventDefault();
+
+        const name = document.querySelector("[name='name']").value;
+        const employeeId = document.querySelector("[name='employeeId']").value;
+
+
+    
+        // const employee = {name, employeeId};
+
+        
+
+        const medlemListe = JSON.parse(window.localStorage.getItem("teamList")) || [];
+
+        medlemListe.push({name: name, ansattnr: employeeId});
+
+
+        window.localStorage.setItem("teamList", JSON.stringify(medlemListe));
+
 
         event.target.reset();
 
-        // Alternativ løsning?
+     }
 
-/*
-        const tre = JSON.parse(window.localStorage.getItem("teamList"));
+     // REGISTRERE NY ARBEIDSOPPGAVE
 
-          if(tre != null){
-             teamList.push(employee);
-        } else {
-            window.localStorage.setItem("teamList", JSON.stringify(teamList));
-        }
-        */ 
+    function registerTask(event) {
+        event.preventDefault();
 
-        
+        const headLine = document.querySelector("[name='headLine']").value;
+        const description = document.querySelector("[name='description']").value;
+        const assignedMember = document.getElementById("delegateTask").value;
 
+        const assignmentList = JSON.parse(window.localStorage.getItem("assignmentList")) || [];
 
-        
+        assignmentList.push({headLine: headLine, description: description, member: assignedMember});
+        window.localStorage.setItem("assignmentList", JSON.stringify(assignmentList));
 
-        /* const medlemListe = JSON.parse(window.localStorage.getItem("teamList"));
-        medlemListe.push(employee);
-        window.localStorage.setItem("teamList", JSON.stringify(teamList));
-*/
+        event.target.reset();
+
     }
+
+    
+
+
 
 // VIS MEDLEMMER
 
     function displayMembers(event) {
         event.preventDefault();
 
-        const memberList = JSON.parse(window.localStorage.getItem("teamList"));
+        let outputDiv = document.getElementById("teamMembers");
+        outputDiv.innerHTML = "";
 
-        const outputDiv = document.getElementById("teamMembers");
-        outputDiv.style.display = "initial";
+        let teamInputs = JSON.parse(localStorage.getItem("teamList"));
 
 
-
-        if(memberList === null){
-            let memberElement = document.createElement("div");
-             memberElement.style.backgroundColor = "white";
-
-             memberElement.innerText =  "Legg til medlemmer for å vise ansatte";
-             outputDiv.appendChild(memberElement);
+        if(teamInputs === null){
+            let emptyMessage = document.createElement("div");
+            emptyMessage.innerHTML = "Legg til medlemmer for at de skal vises";
+            outputDiv.appendChild(emptyMessage);
         } else {
-            for (const member of memberList){
-                let secondMemberElement = document.createElement("div");
+            for(let i=0; i<teamInputs.length; i++){
+                let members = document.createElement("div");
+                members.innerHTML = teamInputs[i].name + ": " + teamInputs[i].ansattnr;
+                outputDiv.appendChild(members);
 
-                secondMemberElement.style.backgroundColor = "white";
-                secondMemberElement.innerText = member.name + ", ansattnr: " + member.employeeId;
-                outputDiv.appendChild(secondMemberElement);
             }
         }
+       /*  let optionOutput = document.createElement("option");
+            optionOutput.value = teamInputs[i].name;
+            optionOutput.value = teamInputs[i].name; 
+*/
 
+        event.target.reset();
     }
 
 
 // ARBEIDSOPPGAVE
 
     const taskDown = document.getElementById("delegateTask");
+    taskDown.value = "";
+    taskDown.text = "";
 
     const dragMemberList = JSON.parse(window.localStorage.getItem("teamList")) || [];
-    let nameArray;
+    let nameArray = [];
 
-    for(const vasker of dragMemberList){
-        nameArray = [vasker.name];
-        console.log(nameArray);
+    for(const participant of dragMemberList){
+        nameArray.push(participant.name);
     }
 
-    for(const ansatt of dragMemberList){
-        if(dragMemberList === null){
-            const newOption = document.createElement("option");
-            newOption.value="Medlemslisten er tom";
-
-        } else {
-
-            for (let i = 0; i < nameArray.length; i++){
-                let option = document.createElement("option");
-                option.value = nameArray[i];
-                option.text = nameArray[i];
-                taskDown.appendChild(option);
-            }
-
-
+    if(nameArray === []){
+        let newOption = document.createElement("option");
+        newOption.value="Medlemslisten er tom";
+        newOption.text = "Listen er tom";
+        taskDown.appendChild(newOption);
+    }else {
+        for(let i=0; i<nameArray.length; i++){
+            let option = document.createElement("option");
+            option.value = nameArray[i];
+            option.text = nameArray[i];
+            taskDown.appendChild(option);
         }
 
     }
+    
+
 
 
 

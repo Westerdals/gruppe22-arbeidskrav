@@ -132,10 +132,12 @@
      function registerMember(event){
         event.preventDefault();
 
-        const name = document.querySelector("[name='name']").value;
-        const employeeId = document.querySelector("[name='employeeId']").value;
+        let name = document.querySelector("[name='name']").value;
+        let employeeId = document.querySelector("[name='employeeId']").value;
 
-        
+        if((name === "") || (employeeId === "")){
+            window.alert("Fyll inn boksene for å registrere et medlem");
+        } else {
 
         const medlemListe = JSON.parse(window.localStorage.getItem("teamList")) || [];
 
@@ -146,6 +148,7 @@
 
 
         event.target.reset();
+        }
 
      }
 
@@ -158,12 +161,19 @@
         const description = document.querySelector("[name='description']").value;
         const assignedMember = document.getElementById("delegateTask").value;
 
+        if(headLine === ""){
+            window.alert("Fyll inn overskrift for å registrere en oppgave");
+        } else if(description === ""){
+            window.alert("Fyll inn en beskrivelse av hva som skal gjøres for å registrere en oppgave");
+        } else {
+
         const assignmentList = JSON.parse(window.localStorage.getItem("assignmentList")) || [];
 
         assignmentList.push({headLine: headLine, description: description, member: assignedMember});
         window.localStorage.setItem("assignmentList", JSON.stringify(assignmentList));
 
         event.target.reset();
+        }
 
     }
 
@@ -194,12 +204,15 @@
     }
 
 
-
 // Vis mulige medlemmer i drop-down liste
 
     const taskDown = document.getElementById("delegateTask");
     taskDown.value = "";
-    taskDown.text = "";
+    taskDown.text = "Tildel til et medlem";
+    let firstOption = document.createElement("option");
+    firstOption.value = "Tildel oppgave til et medlem";
+    firstOption.text = "Tildel oppgave til et medlem";
+    taskDown.appendChild(firstOption);
 
     const dragMemberList = JSON.parse(window.localStorage.getItem("teamList")) || [];
     let nameArray = [];
@@ -235,15 +248,19 @@
         let oppGaveInputs = JSON.parse(window.localStorage.getItem("assignmentList"));
         let memberOutputs = JSON.parse(window.localStorage.getItem("teamList"));
 
-        let arrayLength = oppGaveInputs.length;
+        
 
   if(oppGaveInputs === null){
+
             let emptyMessage = document.createElement("div");
             emptyMessage.innerHTML = "Legg til oppgaver for at de skal vises";
             oppgaveOutputDiv.appendChild(emptyMessage);
+        
         } else {
-
-   for(let i=0; i<arrayLength; i++){
+            
+            let arrayLength = oppGaveInputs.length;
+                
+                for(let i=0; i<arrayLength; i++){
                 let oppgaver = document.createElement("div");
        
                 oppgaver.innerHTML = `* ${oppGaveInputs[i].headLine}:
@@ -251,8 +268,7 @@
                 Gjøres av: ${oppGaveInputs[i].member}`;
        
                 oppgaveOutputDiv.appendChild(oppgaver);
-            }
-    
+                }
         } 
   }
 
